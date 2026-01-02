@@ -43,6 +43,10 @@ EXECUTION:
 3. Create ONE focused chart
 4. Give 1-line insight after creating chart
 
+SQL RULES (if querying data) - Date columns are VARCHAR:
+- EXTRACT: EXTRACT(MONTH FROM CAST(date AS DATE))
+- STRFTIME: STRFTIME(CAST(date AS DATE), '%Y-%m')
+
 Example: create_bar_chart(dataset_name="_last_query_result", x_column="category", y_column="total_revenue", title="Revenue by Category")
 
 Quality over quantity. One great chart beats three mediocre ones."""

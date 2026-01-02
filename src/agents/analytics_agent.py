@@ -47,6 +47,10 @@ STATISTICAL TOOLS:
 - Outliers: flag unusual values
 - Trends: calculate growth rates
 
+SQL RULES (DuckDB) - Date columns are VARCHAR:
+- EXTRACT: EXTRACT(MONTH FROM CAST(date AS DATE))
+- STRFTIME: STRFTIME(CAST(date AS DATE), '%Y-%m')
+
 Keep numbers prominent. Format currency ($1.2M) and percentages (15.3%) clearly."""
 
 # Keywords that indicate complex reasoning is needed

@@ -30,8 +30,11 @@ HOW TO RESPOND (like a data analyst):
 
 **Quick Take**: [1-2 bullet points if needed]
 
-SQL RULES (DuckDB):
-- Date columns are strings: STRFTIME(CAST(date AS DATE), '%Y-%m')
+SQL RULES (DuckDB) - CRITICAL:
+- Date columns are VARCHAR strings, ALWAYS CAST before date operations:
+  * EXTRACT: EXTRACT(MONTH FROM CAST(date AS DATE))
+  * STRFTIME: STRFTIME(CAST(date AS DATE), '%Y-%m')
+  * date_part: date_part('month', CAST(date AS DATE))
 - Always LIMIT results (max 20 for display)
 - Round numbers: ROUND(value, 2)
 - Add calculated columns when useful (% of total, rankings)

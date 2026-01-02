@@ -2,6 +2,8 @@
 
 from typing import Any
 import pandas as pd
+import numpy as np
+from datetime import datetime, timedelta, date
 from langchain_core.tools import tool
 
 from src.data_loader import DataLoader
@@ -34,7 +36,11 @@ class PandasTools:
             
             safe_globals = {
                 "pd": pd,
+                "np": np,
                 "df": df,
+                "datetime": datetime,
+                "timedelta": timedelta,
+                "date": date,
                 "__builtins__": {
                     "len": len,
                     "range": range,
@@ -57,6 +63,13 @@ class PandasTools:
                     "True": True,
                     "False": False,
                     "None": None,
+                    "print": print,
+                    "tuple": tuple,
+                    "set": set,
+                    "type": type,
+                    "isinstance": isinstance,
+                    "getattr": getattr,
+                    "hasattr": hasattr,
                 },
             }
             
@@ -226,11 +239,17 @@ def create_pandas_tools(data_loader: DataLoader) -> list:
     def execute_pandas(code: str, dataset_name: str) -> dict:
         """
         Execute pandas code on a dataset.
-        The code should use 'df' to refer to the dataset.
+        
+        Available variables (DO NOT import anything):
+        - df: the dataset as a DataFrame
+        - pd: pandas module
+        - np: numpy module  
+        - datetime, date, timedelta: from datetime module
+        
         Store the final result in a variable called 'result'.
         
         Args:
-            code: Python/pandas code to execute
+            code: Python/pandas code (no imports needed)
             dataset_name: Name of the dataset to query
         
         Returns:
