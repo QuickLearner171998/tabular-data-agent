@@ -135,6 +135,16 @@ class VisualizationAgent:
                             "result": result,
                         })
                         
+                        # Check for tool-level errors
+                        if isinstance(result, dict) and not result.get("success", True):
+                            error_msg = result.get("error", "Unknown error")
+                            logger.warning(f"Tool {tool_name} returned error: {error_msg}")
+                            messages.append(ToolMessage(
+                                content=f"Error: {error_msg}",
+                                tool_call_id=tool_call["id"],
+                            ))
+                            continue
+                        
                         # Collect figures
                         if isinstance(result, dict) and "figure" in result:
                             figures.append({

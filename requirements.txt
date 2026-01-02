@@ -13,6 +13,7 @@ duckdb>=1.0.0
 # Visualization
 plotly>=5.18.0
 matplotlib>=3.8.0
+statsmodels>=0.14.0
 
 # UI
 streamlit>=1.38.0

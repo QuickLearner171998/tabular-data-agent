@@ -194,9 +194,18 @@ class VizTools:
         color_column: str | None = None,
         size_column: str | None = None,
     ) -> dict[str, Any]:
-        """Create a scatter plot with trendline."""
+        """Create a scatter plot with optional trendline."""
         try:
             df = self.data_loader.get_dataframe(dataset_name)
+            
+            # Try with trendline, fallback without if statsmodels not available
+            trendline = None
+            if not color_column:
+                try:
+                    import statsmodels
+                    trendline = "ols"
+                except ImportError:
+                    pass  # Skip trendline if statsmodels not installed
             
             fig = px.scatter(
                 df,
@@ -204,7 +213,7 @@ class VizTools:
                 y=y_column,
                 color=color_column,
                 size=size_column,
-                trendline="ols" if not color_column else None,
+                trendline=trendline,
                 color_discrete_sequence=COLOR_SEQUENCE,
             )
             

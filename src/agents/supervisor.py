@@ -297,6 +297,21 @@ class SupervisorAgent:
             
             if result.get("response"):
                 response_text = result["response"]
+                
+                # Handle Gemini's list-of-blocks response format
+                if isinstance(response_text, list):
+                    # Extract text from content blocks
+                    text_parts = []
+                    for block in response_text:
+                        if isinstance(block, dict) and block.get("text"):
+                            text_parts.append(block["text"])
+                        elif isinstance(block, str):
+                            text_parts.append(block)
+                    response_text = "\n".join(text_parts) if text_parts else ""
+                
+                if not response_text:
+                    continue
+                    
                 # Skip verbose viz agent responses when we have figures
                 if agent == "viz_agent" and result.get("figures"):
                     # Just note that charts were created, actual content is in figures
