@@ -80,18 +80,28 @@ class DataExplorerAgent:
         iteration = 0
         tool_results = []
         
-        logger.debug(f"Starting data exploration for query: {query[:50]}...")
+        logger.info(f"DataExplorer starting | Query: {query[:80]}...")
         
         while iteration < max_iterations:
-            response = self.llm_with_tools.invoke(messages)
-            messages.append(response)
+            logger.info(f"DataExplorer iteration {iteration + 1}/{max_iterations} | Calling LLM...")
+            
+            try:
+                response = self.llm_with_tools.invoke(messages)
+                messages.append(response)
+                logger.debug(f"LLM response received | Tool calls: {len(response.tool_calls) if response.tool_calls else 0}")
+            except Exception as e:
+                logger.error(f"LLM call failed: {e}")
+                break
             
             if not response.tool_calls:
+                logger.info(f"DataExplorer complete after {iteration + 1} iterations (no more tool calls)")
                 break
             
             for tool_call in response.tool_calls:
                 tool_name = tool_call["name"]
                 tool_args = tool_call["args"]
+                
+                logger.info(f"DataExplorer calling tool: {tool_name}")
                 
                 tool_func = next(
                     (t for t in self.tools if t.name == tool_name), 

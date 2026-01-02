@@ -139,10 +139,18 @@ class AnalyticsAgent:
         insights = []
         
         while iteration < max_iterations:
-            response = llm_with_tools.invoke(messages)
-            messages.append(response)
+            logger.info(f"AnalyticsAgent iteration {iteration + 1}/{max_iterations} | Calling LLM...")
+            
+            try:
+                response = llm_with_tools.invoke(messages)
+                messages.append(response)
+                logger.debug(f"LLM response received | Tool calls: {len(response.tool_calls) if response.tool_calls else 0}")
+            except Exception as e:
+                logger.error(f"LLM call failed: {e}")
+                break
             
             if not response.tool_calls:
+                logger.info(f"AnalyticsAgent complete after {iteration + 1} iterations (no more tool calls)")
                 break
             
             for tool_call in response.tool_calls:
@@ -155,7 +163,7 @@ class AnalyticsAgent:
                 )
                 
                 if tool_func:
-                    logger.debug(f"Calling tool: {tool_name} with args: {tool_args}")
+                    logger.info(f"AnalyticsAgent calling tool: {tool_name}")
                     result = tool_func.invoke(tool_args)
                     tool_results.append({
                         "tool": tool_name,

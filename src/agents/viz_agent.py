@@ -101,18 +101,25 @@ class VisualizationAgent:
         figures = []
         
         while iteration < max_iterations:
-            response = self.llm_with_tools.invoke(messages)
-            messages.append(response)
+            logger.info(f"VizAgent iteration {iteration + 1}/{max_iterations} | Calling LLM...")
+            
+            try:
+                response = self.llm_with_tools.invoke(messages)
+                messages.append(response)
+                logger.debug(f"LLM response received | Tool calls: {len(response.tool_calls) if response.tool_calls else 0}")
+            except Exception as e:
+                logger.error(f"LLM call failed: {e}")
+                break
             
             if not response.tool_calls:
-                logger.debug(f"No more tool calls after iteration {iteration}")
+                logger.info(f"VizAgent complete after {iteration + 1} iterations (no more tool calls)")
                 break
             
             for tool_call in response.tool_calls:
                 tool_name = tool_call["name"]
                 tool_args = tool_call["args"]
                 
-                logger.debug(f"Calling tool: {tool_name}")
+                logger.info(f"VizAgent calling tool: {tool_name}")
                 
                 tool_func = next(
                     (t for t in self.tools if t.name == tool_name),
