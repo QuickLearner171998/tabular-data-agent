@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     openai_reasoning_model: str = Field(default="o3-mini", alias="OPENAI_REASONING_MODEL")
     
     # Gemini Models - Tiered architecture
-    gemini_fast_model: str = Field(default="gemini-2.0-flash", alias="GEMINI_FAST_MODEL")
-    gemini_reasoning_model: str = Field(default="gemini-2.0-flash-thinking-exp", alias="GEMINI_REASONING_MODEL")
+    gemini_fast_model: str = Field(default="gemini-2.5-flash", alias="GEMINI_FAST_MODEL")
+    gemini_reasoning_model: str = Field(default="gemini-2.5-flash-thinking-exp", alias="GEMINI_REASONING_MODEL")
     
     temperature: float = Field(default=0.0, alias="LLM_TEMPERATURE")
     max_tokens: int = Field(default=4096, alias="MAX_TOKENS")
