@@ -9,11 +9,15 @@ import pandas as pd
 import plotly.io as pio
 from pathlib import Path
 import sys
+import logging
 
 sys.path.insert(0, str(Path(__file__).parent))
 
 from src.data_loader import DataLoader
 from src.agents.supervisor import SupervisorAgent
+from src.utils.logger import get_logger
+
+logger = get_logger("cpg_agent.app")
 
 
 st.set_page_config(
@@ -151,8 +155,10 @@ def render_sidebar():
         )
         
         if provider != st.session_state.llm_provider:
+            old_provider = st.session_state.llm_provider
             st.session_state.llm_provider = provider
             st.session_state.supervisor = None
+            logger.info(f"LLM provider changed: {old_provider} → {provider}")
         
         st.markdown("---")
         st.markdown("### Data Management")
